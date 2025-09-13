@@ -2,7 +2,6 @@
 
 const tab = document.querySelector('table');
 const headRow = tab.rows[0];
-const arrayRows = Array.from(tab.tBodies[0].rows);
 
 function extractNumbe(str) {
   const elem = str.replace(/[^\d,]/g, '');
@@ -11,7 +10,8 @@ function extractNumbe(str) {
 }
 
 headRow.addEventListener('click', (e) => {
-  const cell = e.target.closest('th , td');
+  const arrayRows = Array.from(tab.tBodies[0].rows);
+  const cell = e.target.closest('th, td');
   const colIndex = cell.cellIndex;
 
   const newSortArr = arrayRows.sort((a, b) => {
