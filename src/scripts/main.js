@@ -1,35 +1,49 @@
 'use strict';
 
 const tab = document.querySelector('table');
-const headRow = tab.rows[0];
 
-function extractNumbe(str) {
-  const elem = str.replace(/[^\d,]/g, '');
+function sortTable() {
+  if (!tab) {
+    return;
+  }
 
-  return elem ? Number(elem) : NaN;
-}
+  const headRow = tab.rows[0];
 
-headRow.addEventListener('click', (e) => {
-  const arrayRows = Array.from(tab.tBodies[0].rows);
-  const cell = e.target.closest('th, td');
-  const colIndex = cell.cellIndex;
+  function extractNumbe(str) {
+    const elem = str.replace(/[^\d.,-]/g, '');
 
-  const newSortArr = arrayRows.sort((a, b) => {
-    const va = a.cells[colIndex].textContent.trim();
-    const vb = b.cells[colIndex].textContent.trim();
-    const na = Number(va);
-    const nb = Number(vb);
+    return elem ? Number(elem) : NaN;
+  }
 
-    if (!Number.isNaN(na) && !Number.isNaN(nb)) {
-      return na - nb;
-    }
+  headRow.addEventListener('click', (e) => {
+    const arrayRows = Array.from(tab.tBodies[0].rows);
+    const cell = e.target.closest('th , td');
 
-    if (!Number.isNaN(extractNumbe(va)) && !Number.isNaN(extractNumbe(vb))) {
-      return extractNumbe(va) - extractNumbe(vb);
-    } else {
-      return va.localeCompare(vb);
+    if (cell) {
+      const colIndex = cell.cellIndex;
+      const newSortArr = arrayRows.sort((a, b) => {
+        const va = a.cells[colIndex].textContent.trim();
+        const vb = b.cells[colIndex].textContent.trim();
+        const na = Number(va);
+        const nb = Number(vb);
+
+        if (!Number.isNaN(na) && !Number.isNaN(nb)) {
+          return na - nb;
+        }
+
+        if (
+          !Number.isNaN(extractNumbe(va)) &&
+          !Number.isNaN(extractNumbe(vb))
+        ) {
+          return extractNumbe(va) - extractNumbe(vb);
+        } else {
+          return va.localeCompare(vb);
+        }
+      });
+
+      newSortArr.forEach((el) => tab.tBodies[0].append(el));
     }
   });
+}
 
-  newSortArr.forEach((el) => tab.tBodies[0].append(el));
-});
+sortTable();
